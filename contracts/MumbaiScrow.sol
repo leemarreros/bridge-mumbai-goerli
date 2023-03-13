@@ -54,6 +54,7 @@ contract MumbaiScrow is AccessControl {
             _totalToWihdraw[msg.sender] -= _amount;
         }
 
+        Token.transfer(msg.sender, _amount);
         emit Withdraw(msg.sender, _amount);
     }
 }
