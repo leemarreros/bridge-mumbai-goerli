@@ -4,7 +4,7 @@ pragma solidity ^0.8.18;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract GoerliScrow is AccessControl {
+contract GoerliEscrow is AccessControl {
     bytes32 public constant BRIDGE_CONTROLLER = keccak256("BRIDGE_CONTROLLER");
 
     MyTokenWrapped public TokenWrapped;

@@ -11,15 +11,16 @@ async function main() {
   console.log("MyToken address:", myToken.address);
   tx = await myToken.deployed();
 
-  if (process.env.HARDHAT_NETWORK) {
-    await tx.deployTransaction.wait(5);
-  }
+  // if (process.env.HARDHAT_NETWORK) {
+  //   await tx.deployTransaction.wait(5);
+  // }
 
   // 0x7AC2641e8C80D974f61af4D893c987B09CA0c812
-  const MumbaiScrow = await ethers.getContractFactory("MumbaiScrow");
-  const mumbaiScrow = await MumbaiScrow.deploy(myToken.address);
-  console.log("MumbaiScrow address:", mumbaiScrow.address);
+  const MumbaiEscrow = await ethers.getContractFactory("MumbaiEscrow");
+  const mumbaiScrow = await MumbaiEscrow.deploy(myToken.address);
+  console.log("MumbaiEscrow address:", mumbaiScrow.address);
   tx = await mumbaiScrow.deployed();
+  return;
   if (process.env.HARDHAT_NETWORK) {
     await tx.deployTransaction.wait(5);
   }
@@ -38,20 +39,20 @@ async function main() {
   });
 
   await hre.run("verify:verify", {
-    contract: "contracts/MumbaiScrow.sol:MyToken",
+    contract: "contracts/MumbaiEscrow.sol:MyToken",
     address: myToken.address,
     constructorArguments: [],
   });
 }
 
-async function execTx() {
+async function depositForBridge() {
   const [owner] = await ethers.getSigners();
 
   var tx;
 
   var mumbaiScrowAdd = "0x7AC2641e8C80D974f61af4D893c987B09CA0c812";
-  const MumbaiScrow = await ethers.getContractFactory("MumbaiScrow");
-  const mumbaiScrow = await MumbaiScrow.attach(mumbaiScrowAdd);
+  const MumbaiEscrow = await ethers.getContractFactory("MumbaiEscrow");
+  const mumbaiScrow = await MumbaiEscrow.attach(mumbaiScrowAdd);
 
   var tokenAddress = "0x182e51b8613c49247B4715fBD5330DC9FdfECbA3";
   const MyToken = await ethers.getContractFactory("MyToken");
@@ -69,8 +70,8 @@ async function execTx() {
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
-// main()
-execTx()
+main()
+  // depositForBridge()
   //
   .catch((error) => {
     console.error(error);

@@ -7,9 +7,9 @@ async function main() {
   var tx;
 
   // 0xf4664Fc83FBf0e78ec0a64cdd6B156586E2889a0
-  const GoerliScrow = await ethers.getContractFactory("GoerliScrow");
-  const goerliScrow = await GoerliScrow.deploy();
-  console.log("GoerliScrow address:", goerliScrow.address);
+  const GoerliEscrow = await ethers.getContractFactory("GoerliEscrow");
+  const goerliScrow = await GoerliEscrow.deploy();
+  console.log("GoerliEscrow address:", goerliScrow.address);
   tx = await goerliScrow.deployed();
   if (process.env.HARDHAT_NETWORK) {
     await tx.deployTransaction.wait(5);
@@ -35,8 +35,8 @@ async function withdraw() {
 
   // 0xf4664Fc83FBf0e78ec0a64cdd6B156586E2889a0
   var goerliScrowAddress = "0xf4664Fc83FBf0e78ec0a64cdd6B156586E2889a0";
-  const GoerliScrow = await ethers.getContractFactory("GoerliScrow");
-  const goerliScrow = await GoerliScrow.attach(goerliScrowAddress);
+  const GoerliEscrow = await ethers.getContractFactory("GoerliEscrow");
+  const goerliScrow = await GoerliEscrow.attach(goerliScrowAddress);
 
   var ONE_THOUSAND = ethers.utils.parseEther("1000");
   tx = await goerliScrow.withdraw(ONE_THOUSAND);
@@ -49,8 +49,8 @@ async function depositForBridge() {
 
   // 0xf4664Fc83FBf0e78ec0a64cdd6B156586E2889a0
   var goerliScrowAddress = "0xf4664Fc83FBf0e78ec0a64cdd6B156586E2889a0";
-  const GoerliScrow = await ethers.getContractFactory("GoerliScrow");
-  const goerliScrow = await GoerliScrow.attach(goerliScrowAddress);
+  const GoerliEscrow = await ethers.getContractFactory("GoerliEscrow");
+  const goerliScrow = await GoerliEscrow.attach(goerliScrowAddress);
 
   var ONE_THOUSAND = ethers.utils.parseEther("1000");
   tx = await goerliScrow.depositForBridge(owner.address, ONE_THOUSAND);
@@ -59,9 +59,9 @@ async function depositForBridge() {
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
-// main()
-// withdraw()
-depositForBridge()
+main()
+  // withdraw()
+  // depositForBridge()
   //
   .catch((error) => {
     console.error(error);
