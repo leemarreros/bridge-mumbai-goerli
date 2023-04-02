@@ -3,7 +3,6 @@ pragma solidity ^0.8.18;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "hardhat/console.sol";
 
 contract MumbaiEscrow is AccessControl {
     bytes32 public constant BRIDGE_CONTROLLER = keccak256("BRIDGE_CONTROLLER");
@@ -12,17 +11,17 @@ contract MumbaiEscrow is AccessControl {
     MyToken Token;
 
     event Deposit(
-        bytes32 indexed hashedData,
+        bytes32 hashedData,
         address indexed from,
         address indexed to,
         uint256 amount,
-        bytes32 fromChain
+        bytes32 indexed fromChain
     );
     event ForWithdraw(address indexed from, uint256 amount);
     event Withdraw(address indexed from, uint256 amount);
     event Rollback(address indexed from, uint256 amount);
 
-    mapping(address => uint256) internal _totalToWihdraw;
+    mapping(address => uint256) public totalToWihdraw;
 
     struct Transaction {
         address from;
@@ -39,7 +38,6 @@ contract MumbaiEscrow is AccessControl {
     }
 
     function depositForBridge(address _to, uint256 _amount) external {
-        console.log("depositForBridge Mumbai", _to, _amount);
         bool success = Token.transferFrom(_msgSender(), address(this), _amount);
         require(success, "Transfer failed");
 
@@ -86,7 +84,7 @@ contract MumbaiEscrow is AccessControl {
         uint256 _amount
     ) external onlyRole(BRIDGE_CONTROLLER) {
         unchecked {
-            _totalToWihdraw[_to] += _amount;
+            totalToWihdraw[_to] += _amount;
         }
 
         emit ForWithdraw(_to, _amount);
@@ -94,12 +92,12 @@ contract MumbaiEscrow is AccessControl {
 
     function withdraw(uint256 _amount) external {
         require(
-            _totalToWihdraw[_msgSender()] >= _amount,
+            totalToWihdraw[_msgSender()] >= _amount,
             "Not enough funds to withdraw"
         );
 
         unchecked {
-            _totalToWihdraw[_msgSender()] -= _amount;
+            totalToWihdraw[_msgSender()] -= _amount;
         }
 
         Token.transfer(_msgSender(), _amount);

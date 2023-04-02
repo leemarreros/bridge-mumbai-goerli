@@ -3,7 +3,6 @@ pragma solidity ^0.8.18;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "hardhat/console.sol";
 
 contract GoerliEscrow is AccessControl {
     bytes32 public constant BRIDGE_CONTROLLER = keccak256("BRIDGE_CONTROLLER");
@@ -11,7 +10,7 @@ contract GoerliEscrow is AccessControl {
 
     MyTokenWrapped public TokenWrapped;
 
-    mapping(address => uint256) internal _totalToWihdraw;
+    mapping(address => uint256) public totalToWihdraw;
 
     event Deposit(
         bytes32 indexed hashedData,
@@ -23,7 +22,6 @@ contract GoerliEscrow is AccessControl {
     event ForWithdraw(address indexed from, uint256 amount);
     event Withdraw(address indexed from, uint256 amount);
     event Rollback(address indexed from, uint256 amount);
-    event FireEvent(address firing);
 
     struct Transaction {
         address from;
@@ -43,24 +41,20 @@ contract GoerliEscrow is AccessControl {
         address _to,
         uint256 _amount
     ) external onlyRole(BRIDGE_CONTROLLER) {
-        console.log("increaseWithdraw", _to, _amount);
-
         unchecked {
-            _totalToWihdraw[_to] += _amount;
+            totalToWihdraw[_to] += _amount;
         }
 
         emit ForWithdraw(_to, _amount);
     }
 
     function withdraw(uint256 _amount) external {
-        console.log("withdraw", _amount);
-
         require(
-            _totalToWihdraw[_msgSender()] >= _amount,
+            totalToWihdraw[_msgSender()] >= _amount,
             "Not enough funds to withdraw"
         );
         unchecked {
-            _totalToWihdraw[_msgSender()] -= _amount;
+            totalToWihdraw[_msgSender()] -= _amount;
         }
         TokenWrapped.mint(_msgSender(), _amount);
         emit Withdraw(_msgSender(), _amount);
@@ -105,10 +99,6 @@ contract GoerliEscrow is AccessControl {
         require(_tx.timestamp != 0, "Transaction not found");
 
         _tx.read = true;
-    }
-
-    function fireEvent() external {
-        emit FireEvent(msg.sender);
     }
 }
 

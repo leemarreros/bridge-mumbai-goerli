@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { ethers, BigNumber, Wallet, providers } from "ethers";
+import { ethers, Wallet, providers } from "ethers";
 
 import {
   DefenderRelaySigner,
@@ -38,8 +38,9 @@ var mumbaiEscrowAdd = "0xa676115C4C3c9Ab9b1Bd9Ed1Ca035A8F51E24bc3";
 export var net1: string; // Goerli
 export var net2: string; // Mumbai
 
+// following script when testing in a local duo chain
+// npx ts-node index.ts testnet
 var testnet = process.argv[process.argv.length - 1] == "testnet";
-console.log("testnet", testnet);
 
 if (HARDHAT_NETWORK == "mumbai" || HARDHAT_NETWORK == "goerli" || testnet) {
   net1 = GOERLI_TESNET_URL || "";
