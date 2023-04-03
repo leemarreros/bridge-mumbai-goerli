@@ -13,7 +13,6 @@ contract MumbaiEscrow is AccessControl {
     event ForWithdraw(address indexed from, uint256 amount);
     event Withdraw(address indexed from, uint256 amount);
 
-    mapping(address => uint256) internal _totalDeposited;
     mapping(address => uint256) internal _totalToWihdraw;
 
     constructor(MyToken _token) {
@@ -25,8 +24,6 @@ contract MumbaiEscrow is AccessControl {
         bool success = Token.transferFrom(msg.sender, address(this), _amount);
         require(success, "Transfer failed");
 
-        _totalDeposited[_to] += _amount;
-
         emit Deposit(_to, _amount);
     }
 
@@ -34,10 +31,7 @@ contract MumbaiEscrow is AccessControl {
         address _to,
         uint256 _amount
     ) external onlyRole(BRIDGE_CONTROLLER) {
-        require(_totalDeposited[_to] >= _amount, "Not enough funds desposited");
-
         unchecked {
-            _totalDeposited[_to] -= _amount;
             _totalToWihdraw[_to] += _amount;
         }
 
