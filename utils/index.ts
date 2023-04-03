@@ -29,11 +29,11 @@ const {
 export var topicId = "0.0.3957446";
 
 // goerli escrow address
-var goerliEscrowAdd = "0xb3266C22e6298dcC1c375DebDA36e7560fEf3E73";
+var goerliEscrowAdd = "0x04013e5916C480B48114d077CC517b57fFC35691";
 // mumbai token add
-var mumbaiTokenAdd = "0x80fF639CB6C9eF60DCf161977365704AAef5d089";
+var mumbaiTokenAdd = "0xe76Af919763d8DCc292CbA783300B60827E0AB64";
 // mumbai escrow address
-var mumbaiEscrowAdd = "0xa676115C4C3c9Ab9b1Bd9Ed1Ca035A8F51E24bc3";
+var mumbaiEscrowAdd = "0x13B3Cabff0bbcA92Fab58956D302fCe6Fc80e097";
 
 export var net1: string; // Goerli
 export var net2: string; // Mumbai

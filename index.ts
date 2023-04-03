@@ -26,6 +26,8 @@ async function subscribeToTopicHCS() {
   new TopicMessageQuery()
     .setTopicId(topicId)
     .subscribe(client, null, async (message) => {
+      console.log("Message received from HCS");
+
       var tx;
       let scEscrowOrigin, scEscrowDest, signerSource, signerDestiny;
 
@@ -48,6 +50,7 @@ async function subscribeToTopicHCS() {
       // Make verifications about the transaction
       // Rollback if needed
       const isOk = await verifyTransaction(message, scEscrowOrigin);
+      console.log("Transaction is verified: " + isOk);
       if (!isOk) {
         await scEscrowOrigin
           .connect(signerSource)
@@ -56,12 +59,14 @@ async function subscribeToTopicHCS() {
       }
       // Mark transaction as read in source chain
       tx = await scEscrowOrigin.connect(signerSource).markAsRead(hashedData);
+      console.log("Transaction is marked as read in source chain");
       await tx.wait();
 
       // Update tokens in the other chain
       tx = await scEscrowDest
         .connect(signerDestiny)
         .increaseWithdraw(to, amount);
+      console.log("Withdraw amount increased in the other chain");
       await tx.wait();
     });
 }
@@ -73,10 +78,11 @@ async function subscribeToSmartContractEvents(_net1: string, _net2: string) {
 
   function subscribe(escrowSC: typeof mumbaiEscrowC | typeof goerliEscrowC) {
     escrowSC.on("Deposit", async (hashedData, from, to, amount, fromChain) => {
+      console.log("Deposit event listened");
       // Verify that transaction was not read already
       var [, , , , read]: [string, string, string, BigNumber, boolean] =
         await escrowSC.listOfTransactions(hashedData);
-      console.log("read", read);
+
       if (read) return;
 
       // Send message to the topic
@@ -84,6 +90,7 @@ async function subscribeToSmartContractEvents(_net1: string, _net2: string) {
         topicId,
         message: JSON.stringify({ hashedData, from, to, amount, fromChain }),
       }).execute(client);
+      console.log("Transaction is submitted to HCS");
 
       // Get the receipt of the transaction
       const getReceipt = await sendResponse.getReceipt(client);
@@ -98,8 +105,6 @@ async function subscribeToSmartContractEvents(_net1: string, _net2: string) {
 
   subscribe(goerliEscrowC);
   subscribe(mumbaiEscrowC);
-
-  console.log("Successfully subscrived to smart contract events");
 }
 
 subscribeToTopicHCS();

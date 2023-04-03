@@ -71,11 +71,11 @@ async function depositForBridge() {
 Console set up (npx hardhat console --network net2):
 
 var signer = await ethers.getSigner() 
-const MumbaiTokenAdd = "0x80fF639CB6C9eF60DCf161977365704AAef5d089";
+const MumbaiTokenAdd = "0xe76Af919763d8DCc292CbA783300B60827E0AB64";
 const MumbaiToken = await ethers.getContractFactory("MyToken");
 const MumbaiTokenC = await MumbaiToken.attach(MumbaiTokenAdd)
 
-const MumbaiEscrowAdd = "0xa676115C4C3c9Ab9b1Bd9Ed1Ca035A8F51E24bc3";
+const MumbaiEscrowAdd = "0x13B3Cabff0bbcA92Fab58956D302fCe6Fc80e097";
 const MumbaiEscrow = await ethers.getContractFactory("MumbaiEscrow");
 const MumbaiEscrowC = MumbaiEscrow.attach(MumbaiEscrowAdd);
 

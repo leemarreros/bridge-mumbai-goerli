@@ -1,13 +1,5 @@
 ## The creation of a bridge between Mumbai and Goerli testnets
 
-Table of contents:
-
-- What is a bridge good for?
-- Centralized bridge
-  - Tech stack
-
-
-
 **What is a bridge good for?**
 
 ​	Tipically, blockchains work in isolations from other chains. They were not built to share information and assets between them. For that reason, bridges are built. A bridge is another layer that sits in between two chains to facilitate information and asset transfers. There are several ways to build bridge. At least we could find two types of them: decentralized and centralized bridges.
@@ -62,7 +54,7 @@ contract MumbaiEscrow is AccessControl {
 
 ​	This is how a set up of a `sentinel` looks like in OZD. Note that there is a smart contract address, the network in which the smart contract has been deployed, the event to be heard and, finally, the autotask to be triggered whenever the event is heard.
 
-![image-20230402193230265](/Users/steveleec/Documents/Lime Academy/bridge/README.assets/image-20230402193230265.png)
+![image-20230402193230265](https://user-images.githubusercontent.com/3300958/229422359-c02a037c-8c41-4307-afb9-26d213552f9e.png)
 
 <u>3 - Autotask</u>
 
@@ -113,9 +105,7 @@ exports.handler = async function(data) {
 
 ​	A `relayer` in OZD functions as a wallet that is able to trigger smart contract methods by using, usually, a role or a privilege. This wallet plays an admin role. A `relayer` need to be created and set up prior using it. This is how it looks the configuration of the `relayer` that will help us to finish the minting:
 
-![image-20230402201339670](/Users/steveleec/Documents/Lime Academy/bridge/README.assets/image-20230402201339670.png)
-
-
+![image-20230402201339670](https://user-images.githubusercontent.com/3300958/229422364-2f208445-80d1-4294-a313-c46568a6bb0d.png)
 
 ​	For this particular case, the relayer has the privilege to increase the amount to be minted in the `Goerli` chain. The `relayer` is injected in the `autotask` script and triggers a method called `increaseWithdraw` in the destination chain. This method belongs to `GoerliEscrow` smart contract who is in charge of minting the wrapped tokens on the others side of the chain.
 
@@ -307,4 +297,26 @@ If the user would want to get back his tokens from the destination chain to the 
 
 **Testing**
 
-![image-20230402231757994](/Users/steveleec/Documents/Lime Academy/bridge/README.assets/image-20230402231757994.png)
+![image-20230402231757994](https://user-images.githubusercontent.com/3300958/229422367-176a0d96-b678-4230-b2c6-c155d5f2d28e.png)
+
+**Scripts to deploy**
+
+Deploy smart contracts in Goerli:
+
+```bash
+npx hardhat --network goerli run scripts/deployGoerli.ts 
+```
+
+Deploy smart contracts in Mumbai:
+
+```bash
+npx hardhat --network mumbai run scripts/deployMumbai.ts 
+```
+
+Run backend client
+
+```bash
+npx ts-node index.ts testnet
+```
+
+For reviewing the full code go [here]()

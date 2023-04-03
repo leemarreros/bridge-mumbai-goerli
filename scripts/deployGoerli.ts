@@ -61,7 +61,7 @@ async function depositForBridge() {
 Console set up (npx hardhat console --network net1):
 
 var signer = await ethers.getSigner() 
-const GoerliEscrowAdd = "0xb3266C22e6298dcC1c375DebDA36e7560fEf3E73";
+const GoerliEscrowAdd = "0x04013e5916C480B48114d077CC517b57fFC35691";
 const GoerliEscrow = await ethers.getContractFactory("GoerliEscrow");
 const GoerliEscrowC = GoerliEscrow.attach(GoerliEscrowAdd);
 
